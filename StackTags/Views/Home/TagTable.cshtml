@@ -1,0 +1,25 @@
+﻿@model StackTags.Models.TagModel
+@using StackExchange.StacMan;
+
+@{
+	Layout = "";
+}
+<table class="table">
+	<thead>
+		<tr>
+			<th>Tag</th>
+			<th>Used</th>
+			<th>Percentage</th>
+		</tr>
+	</thead>
+
+
+	@foreach (Tag tag in Model.TagCollection)
+	{
+	<tr class="@(tag.Name+"_div")">
+		<td>@tag.Name</td>
+		<td>@tag.Count</td>
+		<td>@(Math.Round(((float)tag.Count / Model.GetSumOfCounts) * 100, 2))%</td>
+	</tr>
+	}
+</table>

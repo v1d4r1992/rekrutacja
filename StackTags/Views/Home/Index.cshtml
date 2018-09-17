@@ -1,0 +1,70 @@
+﻿@model StackTags.Models.TagModel
+@using StackExchange.StacMan;
+
+@{
+	ViewBag.Title = "Tags";
+}
+
+<h2>Tags</h2>
+<style>
+	.ui-menu-item {
+		background: blue;
+		height: 10px;
+		font-size: 8px;
+		display: none;
+	}
+
+</style>
+
+<input class='autocomp' />
+
+<div class="TableDiv">
+
+</div>
+
+<script>
+	var Tags = [
+		@foreach (Tag tag in Model.TagCollection)
+		{
+			@:'@(tag.Name)',
+		}
+	];
+
+	function GetTagList(TagArray) {
+			$.ajax({
+				type: "POST", url: "/TagsTable",
+				success: function (data) { $('.TableDiv').html(data); },
+				data: { data: TagArray },
+				accept: 'application/json',
+			});
+	}
+
+
+    $(document).ready(function () {
+		GetTagList([]);
+    });
+
+	$('.autocomp').keyup(function () {
+		if (this.value == "") {
+			GetTagList([]);
+		}
+	});
+
+
+	$('.autocomp').autocomplete({
+		source: Tags,
+		response: function (event, ui) {
+			var TagArray=[];
+			for (var n = 0; n < ui.content.length; n++) {
+				TagArray.push(ui.content[n].label);
+			}
+
+				if (TagArray.length == 0) {
+					TagArray.push("");
+					GetTagList(TagArray);
+				} else {
+					GetTagList(TagArray);
+				}
+		}
+	});
+</script>
